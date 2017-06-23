@@ -1,0 +1,13 @@
+while (a > b)
+{
+    if(c >= d)
+    {
+        if(e > f)
+        {
+            a = 6 + 1;
+        }
+    }
+    else
+        while(g == h)
+            x = x + 2;
+}
