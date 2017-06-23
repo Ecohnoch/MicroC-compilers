@@ -48,8 +48,10 @@ OBJECTS_DIR   = ./
 
 ####### Files
 
-SOURCES       = ../tokens_parser/main.cpp 
-OBJECTS       = main.o
+SOURCES       = ../tokens_parser/main.cpp \
+		../tokens_parser/token_parser.cpp 
+OBJECTS       = main.o \
+		token_parser.o
 DIST          = ../tokens_parser/input.txt \
 		../../../Qt/5.7/clang_64/mkspecs/features/spec_pre.prf \
 		../../../Qt/5.7/clang_64/mkspecs/qdevice.pri \
@@ -207,7 +209,8 @@ DIST          = ../tokens_parser/input.txt \
 		../../../Qt/5.7/clang_64/mkspecs/features/exceptions.prf \
 		../../../Qt/5.7/clang_64/mkspecs/features/yacc.prf \
 		../../../Qt/5.7/clang_64/mkspecs/features/lex.prf \
-		../tokens_parser/tokens_parser.pro  ../tokens_parser/main.cpp
+		../tokens_parser/tokens_parser.pro token_parser.h ../tokens_parser/main.cpp \
+		../tokens_parser/token_parser.cpp
 QMAKE_TARGET  = tokens_parser
 DESTDIR       = 
 TARGET        = tokens_parser
@@ -579,8 +582,11 @@ compiler_clean:
 
 ####### Compile
 
-main.o: ../tokens_parser/main.cpp 
+main.o: ../tokens_parser/main.cpp ../tokens_parser/token_parser.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o main.o ../tokens_parser/main.cpp
+
+token_parser.o: ../tokens_parser/token_parser.cpp ../tokens_parser/token_parser.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o token_parser.o ../tokens_parser/token_parser.cpp
 
 ####### Install
 
