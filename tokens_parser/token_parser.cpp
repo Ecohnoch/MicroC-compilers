@@ -24,7 +24,6 @@ bool token_parser::isNum(string s){
 }
 
 bool token_parser::isKeywords(string s){
-    string keywords[10] = {"if", "else", "while"};
     for(auto item: keywords){
         if(s == item)
             return true;
@@ -53,8 +52,6 @@ bool token_parser::isID(string s){
 }
 
 void token_parser::parser(string &s){
-    vector<tokens> ans;
-    map<string, int> ids;
     int start = 0, end = 0;
     int l = s.length();
     while(start <= l - 1){
