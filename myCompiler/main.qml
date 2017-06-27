@@ -6,7 +6,7 @@ import QtQuick.Dialogs 1.1
 import QtQuick.Window 2.1
 import QtQuick.Window 2.2
 
-import TokenParser 1.0
+import Transfer 1.0
 import File 1.0
 
 ApplicationWindow {
@@ -16,6 +16,11 @@ ApplicationWindow {
     minimumWidth: 400
     minimumHeight: 300
     title: qsTr("Micro C compilers")
+    property string textAreaBackgrondColor: "#E0E0E0"
+    property string textAreaTextColor: "#333"
+    property string outputBackgroundColor: "#272822"
+    property string outputTextColor: "#FFFFFF"
+    FontLoader{id: uiFont; source: ""}
 
     property string fileSource
     property string sourceCode: ""
@@ -68,8 +73,32 @@ ApplicationWindow {
         iconName: "Parse"
         text: "Parse"
         onTriggered: {
-            // TODO
+            token.doParser()
+            console.log(parserJSON)
+            var data = JSON.parse(parserJSON)
+            var outputData = "语法分析: \n"
+            outputData = outputData + "序号      "+ "栈                " + "剩余记号                " + "动作          " + "说明\n"
+            var eachLine = ""
+            for(var key in data){
+                eachLine = ""
+                eachLine = eachLine + key
+                for(var i = 0; i < 15 - key.length; ++i)
+                    eachLine = eachLine + " "
+                eachLine = eachLine + data[key]["stack"]
+                for(var j = 0; j < 35 - eachLine.length; ++j)
+                    eachLine = eachLine + " "
+                eachLine = eachLine + data[key]["restStr"]
+                for(var k = 0; k < 100 - eachLine.length; ++k)
+                    eachLine = eachLine + " "
+                eachLine = eachLine + data[key]["action"]
+                for(var w = 0; w < 110 - eachLine.length; ++w)
+                    eachLine = eachLine + " "
+                eachLine = eachLine + data[key]["info"] + " \n"
+                outputData = outputData + eachLine
+            }
+            output.text = outputData
         }
+
     }
 
     Action {
@@ -97,7 +126,7 @@ ApplicationWindow {
         iconName: "Token"
         text: "Token"
         onTriggered: {
-            token.doParse()
+            token.doReadTokens()
             output.text = ""
             var outputData = "词法分析: \n"
             outputData = outputData + "序号        " + "记号名       " + "属性值\n"
@@ -128,17 +157,12 @@ ApplicationWindow {
             spacing: 0
             ToolButton{action: fileOpenAction}
             ToolButton{action: readTokensAction}
-            ToolButton{action: fileOpenAction}
-            ToolButton{action: fileOpenAction}
-            ToolButton{action: fileOpenAction}
+            ToolButton{action: fileSaveAction}
+            ToolButton{action: grammarParserAction}
+            ToolButton{action: translateAction}
         }
     }
 
-
-    property string textAreaBackgrondColor: "#E0E0E0"
-    property string textAreaTextColor: "#333"
-    property string outputBackgroundColor: "#272822"
-    property string outputTextColor: "#FFFFFF"
 
     TextArea{
         id: textArea
@@ -184,12 +208,20 @@ ApplicationWindow {
 
     property var s: []
     property var codeJSON
-    TokenParser{
+    property var parserJSON
+    Transfer{
         id: token
-        onDoParse:{
+        onDoReadTokens:{
             getSourcecode(textArea.text);
-            var data = JSON.parse(toJSON())
+            var data = JSON.parse(tokensToJSON())
             codeJSON = data
+        }
+        onDoParser: {
+            getSourcecode(textArea.text);
+            var data = JSON.parse(tokensToJSON())
+            codeJSON = data
+            getParserFlow()
+            parserJSON = parserToJSON()
         }
     }
 }

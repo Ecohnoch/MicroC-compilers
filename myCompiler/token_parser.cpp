@@ -265,30 +265,3 @@ string token_parser::getInput(string filename){
     return ans;
 }
 
-QString token_parser::toJSON(){
-    string x = input;
-    parser(x);
-    string thisAns;
-    thisAns += "{";
-    for(int i = 0; i < ans.size(); ++i){
-        thisAns += "\"";
-        thisAns += to_string(i) + "";
-        thisAns += "\":{";
-        thisAns += "\"token_name\":\"" + ans.at(i).token_name + "\",";
-        thisAns += "\"token_num\" :";
-        thisAns += to_string(ans.at(i).token_num);
-        thisAns += "}";
-        if(i != ans.size() - 1){
-            thisAns += ",";
-        }
-    }
-    thisAns += "}";
-    return QString::fromStdString(thisAns);
-}
-
-void token_parser::getSourcecode(QString sourceCode){
-    string ans = sourceCode.toStdString();
-    input = ans;
-}
-
-

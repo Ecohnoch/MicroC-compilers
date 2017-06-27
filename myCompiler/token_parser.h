@@ -5,12 +5,9 @@
 #include <string>
 #include <map>
 #include <vector>
-#include <QObject>
-#include <QList>
 
 using namespace std;
-class tokens{//: public QObject{
-    // Q_OBJECT
+class tokens{
 public:
     string token_name;
     int token_num;
@@ -19,18 +16,12 @@ public:
     void set(string tn, int tnum){token_name = tn; token_num = tnum;}
     void show(){cout<<"tokenName: "<< token_name<< " token_num: "<< token_num<<endl;}
 };
-class token_parser: public QObject{
-    Q_OBJECT
-signals:
-    void doParse();
-
-public slots:
+class token_parser{
+public:
     // parser, output the ans.   basicElement: <tokenName, tokenNum>
     void parser(string &s);
     // output the input, get the source codes from a txt
     string getInput(string filename = "./input.txt");
-    void getSourcecode(QString sourceCode);
-    QString toJSON();
 public:
 
     // judge if(ch == letter)    letter: a_z, A_Z, -, _

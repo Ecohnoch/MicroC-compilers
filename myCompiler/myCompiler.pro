@@ -4,7 +4,9 @@ QT += qml quick
 CONFIG += c++11
 
 SOURCES += main.cpp \
-    token_parser.cpp
+    token_parser.cpp \
+    transfer.cpp \
+    grammar_parser.cpp
 
 RESOURCES += qml.qrc
 
@@ -32,4 +34,6 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 
 HEADERS += \
     token_parser.h \
-    robotfile.h
+    robotfile.h \
+    transfer.h \
+    grammar_parser.h
