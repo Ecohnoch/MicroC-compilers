@@ -1,5 +1,5 @@
-import QtQuick 2.7
-import QtQuick.Controls 1.2
+import QtQuick 2.2
+import QtQuick.Controls 1.0
 import QtQuick.Controls.Styles 1.4
 import QtQuick.Layouts 1.0
 import QtQuick.Dialogs 1.1
@@ -73,30 +73,10 @@ ApplicationWindow {
         iconName: "Parse"
         text: "Parse"
         onTriggered: {
-            token.doParser()
-            console.log(parserJSON)
-            var data = JSON.parse(parserJSON)
-            var outputData = "语法分析: \n"
-            outputData = outputData + "序号      "+ "栈                " + "剩余记号                " + "动作          " + "说明\n"
-            var eachLine = ""
-            for(var key in data){
-                eachLine = ""
-                eachLine = eachLine + key
-                for(var i = 0; i < 15 - key.length; ++i)
-                    eachLine = eachLine + " "
-                eachLine = eachLine + data[key]["stack"]
-                for(var j = 0; j < 35 - eachLine.length; ++j)
-                    eachLine = eachLine + " "
-                eachLine = eachLine + data[key]["restStr"]
-                for(var k = 0; k < 100 - eachLine.length; ++k)
-                    eachLine = eachLine + " "
-                eachLine = eachLine + data[key]["action"]
-                for(var w = 0; w < 110 - eachLine.length; ++w)
-                    eachLine = eachLine + " "
-                eachLine = eachLine + data[key]["info"] + " \n"
-                outputData = outputData + eachLine
-            }
-            output.text = outputData
+            trans.doParser()
+            tokenView.visible = false
+            parserView.visible = true
+            separator.text = "语法树"
         }
 
     }
@@ -126,26 +106,10 @@ ApplicationWindow {
         iconName: "Token"
         text: "Token"
         onTriggered: {
-            token.doReadTokens()
-            output.text = ""
-            var outputData = "词法分析: \n"
-            outputData = outputData + "序号        " + "记号名       " + "属性值\n"
-            var eachLine = ""
-            for(var key in codeJSON){
-                eachLine = ""
-                eachLine = eachLine + key
-                for(var i = 0; i < 15 - key.length; ++i)
-                    eachLine = eachLine + " "
-                eachLine = eachLine + codeJSON[key]["token_name"]
-                for(var j = 0; j < 35 - eachLine.length; ++j)
-                    eachLine = eachLine + " "
-
-
-                eachLine = eachLine + codeJSON[key]["token_num"]  + "\n"
-                outputData = outputData + eachLine
-                console.log("Debug: ", eachLine.length)
-            }
-            output.text = outputData
+            trans.doTokens()
+            parserView.visible = false
+            tokenView.visible = true
+            separator.text = "记号流"
         }
     }
 
@@ -189,39 +153,86 @@ ApplicationWindow {
         anchors.top: textArea.bottom
         anchors.left: parent.left
         anchors.right: parent.right
+        text: "记号流"
     }
 
-    TextArea{
-        id: output
-        style: TextAreaStyle {
-            textColor: outputTextColor
-            selectionColor: "steelblue"
-            selectedTextColor: "#eee"
-            backgroundColor: outputBackgroundColor
+    TableView{
+        id: tokenView
+        TableViewColumn {
+            role: "line"
+            title: "Line"
+            width: 100
         }
+        TableViewColumn {
+            role: "simbol"
+            title: "Simbol"
+            width: 200
+        }
+        model: tokenModel
         anchors.top: separator.bottom
         anchors.bottom: parent.bottom
         anchors.left: parent.left
         anchors.right: parent.right
-        readOnly: true
+    }
+    ListModel {
+        id: tokenModel
+    }
+
+    TreeView {
+        id: parserView
+        model: parserModel
+        onSelectedItemChanged: console.log(item.text)
+        anchors.top: separator.bottom
+        anchors.bottom: parent.bottom
+        anchors.left: parent.left
+        anchors.right: parent.right
+    }
+    ListModel {
+        id: parserModel
     }
 
     property var s: []
     property var codeJSON
     property var parserJSON
     Transfer{
-        id: token
-        onDoReadTokens:{
-            getSourcecode(textArea.text);
-            var data = JSON.parse(tokensToJSON())
-            codeJSON = data
+        id: trans
+        onDoTokens:{
+            var data = tokensToJSON(textArea.text)
+            codeJSON = JSON.parse(data)
+            for(var key in codeJSON){
+                var exe = "tokenModel.append([{\"line\":\"" + key
+                exe = exe + "\", \"simbol\":\"" + codeJSON[key]
+                exe = exe + "\"}])"
+                eval(exe)
+            }
         }
         onDoParser: {
-            getSourcecode(textArea.text);
-            var data = JSON.parse(tokensToJSON())
-            codeJSON = data
-            getParserFlow()
-            parserJSON = parserToJSON()
+            var data = parserToJSON(textArea.text)
+            parserJSON = JSON.parse(data)
+            var s = ""
+
+            myRecursion(parserJSON)
+            parseStr = "parserModel.append([" + parseStr + "])"
+            eval(parseStr)
         }
     }
+    property string parseStr: ""
+    function myRecursion(json){
+        for(var key in json){
+            for(var realKey in json[key]){
+                if(typeof(json[key][realKey]) == "string"){
+                    parseStr = parseStr + "{title:\"" + json[key][realKey] + "\"},"
+                    //console.log("{title: ", (json[key][realKey]), "}")
+                }else{
+                    for(var kk in json[key][realKey]){
+                        parseStr = parseStr + "{title: " + "\"" + kk + "层" + "\",items:["
+                        //console.log("{title: ", kk, ", items: [")
+                    }
+                    myRecursion(json[key][realKey], s)
+                    parseStr = parseStr.substring(0, parseStr.length - 1) + "]},"
+                }
+            }
+        }
+    }
+
 }

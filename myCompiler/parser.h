@@ -1,15 +1,7 @@
-#ifndef GRAMMAR_PARSER_H
-#define GRAMMAR_PARSER_H
-#include "token_parser.h"
-class basicElement{
-public:
-    basicElement(int s, string sim): state(s), simbol(sim){}
-    int state;
-    string simbol;
-    void set(int s, string sim){state = s; simbol = sim;}
-    void show(){cout<<"state: "<<state<<" simbol:"<<simbol<<endl;}
-};
-
+#ifndef PARSER_H
+#define PARSER_H
+#include "tokenizer.h"
+#include <map>
 class Table{
 public:
     Table(){
@@ -40,7 +32,7 @@ public:
     /* 6 */ {   2, -1,  3,  4, -1,  5, -1, -1, -1, 11, -1},
     /* 7 */ {   2, -1,  3,  4, -1,  5, -1, -1, -1, 12, -1},
     /* 8 */ {  -1, -1, -1, -1, 13, -1, -1, -1, -1, -1, -1},
-    /* 9 */ {  2, -1, 3, 4,105, 5, -1, -1, 105,  9, 14},
+    /* 9 */ {  2,  -1,  3,  4,105,  5, -1, -1, 105,  9, 14},
     /* 10*/ {  104,104, 104, 104,104, 104, -1, -1,104, -1, -1},
     /* 11*/ {  -1, 15, -1, -1, -1, -1, -1, -1, -1, -1, -1},
     /* 12*/ {  102,102, 102, 102, 102, 102, -1, -1,102, -1, -1},
@@ -98,26 +90,53 @@ public:
     map<string, int> column3;
 };
 
-class grammar_parser{
+class Parser
+{
 public:
-    grammar_parser();
-
+    Parser();
+    enum NodeType{
+        NONE, MAIN, STYPE, LTYPE, BOOLTYPE, STATEMENTTYPE, BTYPE,
+        ATYPE, OTYPE, ETYPE, TERMITYPE
+    };
+    class TreeNode{
+    public:
+        Tokenizer::Token token;
+        TreeNode *child[5];
+        TreeNode *parent;
+        NodeType nodetype;
+        TreeNode(){
+            nodetype = NONE;
+            child[0] = child[1] = child[2] = child[3] = child[4] = nullptr;
+            parent = nullptr;
+        }
+    };
+    class stackElement{
+    public:
+        int state;
+        Tokenizer::Token token;
+        stackElement(int s, Tokenizer::Token t):state(s), token(t){}
+        TreeNode* ptr;
+        void set(int s, Tokenizer::Token t){
+            state = s;
+            token = t;
+        }
+    };
     void test();
-    vector<tokens> test1();
-    vector<tokens> test2();
-    vector<tokens> test3();
-    vector<tokens> testControlStatement();
-    void parserControlStatement(vector<tokens> testStr);
-    void parserCalculateStatement(vector<tokens> testStr);
-    void parserBoolStatement(vector<tokens> testStr);
+    void testParseBoolStatement();
+    void testCalculateStatement();
+    void testMainStatement();
+    TreeNode* parseBoolStatement(vector<Tokenizer::Token>);
+    TreeNode* parseCalculateStatement(vector<Tokenizer::Token>);
+    TreeNode* parseMainStatement(vector<Tokenizer::Token>);
 
-    vector<tokens> getControlStatement(vector<tokens> tokenFlow);
-    vector<tokens> getCalculateStatement(vector<tokens> tokenFlow);
-    vector<tokens> getBoolStatement(vector<tokens> tokenFlow);
-    vector<string> outputControlZhan;
-    vector<string> outputControlSimbols;
-    vector<int>    outputControlAction;
-    vector<string> outputControlInstruction;
+    void printSyntaxTree(TreeNode *tree);
+private:
+    Tokenizer tokener;
+    string sourceCode;
+    vector<Tokenizer::Token> tokens;
+    void getSourceCode(string s);
+    void getTokens();
+
 };
 
-#endif // GRAMMAR_PARSER_H
+#endif // PARSER_H

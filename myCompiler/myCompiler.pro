@@ -4,11 +4,12 @@ QT += qml quick
 CONFIG += c++11
 
 SOURCES += main.cpp \
-    token_parser.cpp \
     transfer.cpp \
-    grammar_parser.cpp
+    parser.cpp \
+    tokenizer.cpp
 
-RESOURCES += qml.qrc
+RESOURCES += qml.qrc \
+    resources.qrc
 
 # Additional import path used to resolve QML modules in Qt Creator's code model
 QML_IMPORT_PATH =
@@ -33,7 +34,8 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
 
 HEADERS += \
-    token_parser.h \
     robotfile.h \
     transfer.h \
-    grammar_parser.h
+    scanner.h \
+    parser.h \
+    tokenizer.h

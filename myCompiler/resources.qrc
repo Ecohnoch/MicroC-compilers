@@ -1,0 +1,7 @@
+<RCC>
+    <qresource prefix="/">
+        <file>expander.png</file>
+        <file>arrow.png</file>
+        <file>trigle.png</file>
+    </qresource>
+</RCC>
