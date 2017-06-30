@@ -120,7 +120,8 @@ ApplicationWindow {
             anchors.fill: parent
             spacing: 0
             ToolButton{action: fileOpenAction}
-            ToolButton{action: readTokensAction}
+            ToolButton
+            {action: readTokensAction}
             ToolButton{action: fileSaveAction}
             ToolButton{action: grammarParserAction}
             ToolButton{action: translateAction}
@@ -139,17 +140,17 @@ ApplicationWindow {
         anchors.top: myToolBar.bottom
 
         anchors.bottom: parent.bottom
-        anchors.bottomMargin: 0.24 * parent.height
+        anchors.bottomMargin: 0.4 * parent.height
         anchors.left: parent.left
         anchors.right: parent.right
         font.family: "monoco"
-
+        text:"if((5>3)&&(a<b)||!(6)){\n    p = (3+5*2+6*(3+7)*2+3*3);\n}else{\n    p = c+1;\n    while(5<3){\n        p = 3+3;\n    }\n}"
         // textFormat: Qt.RichText
         Component.onCompleted: forceActiveFocus()
     }
     Label{
         id: separator
-        height: 0.01 * parent.height
+        height: 0.05 * parent.height
         anchors.top: textArea.bottom
         anchors.left: parent.left
         anchors.right: parent.right
@@ -199,6 +200,7 @@ ApplicationWindow {
         onDoTokens:{
             var data = tokensToJSON(textArea.text)
             codeJSON = JSON.parse(data)
+            tokenModel.clear()
             for(var key in codeJSON){
                 var exe = "tokenModel.append([{\"line\":\"" + key
                 exe = exe + "\", \"simbol\":\"" + codeJSON[key]
@@ -210,9 +212,11 @@ ApplicationWindow {
             var data = parserToJSON(textArea.text)
             parserJSON = JSON.parse(data)
             var s = ""
-
+            parserModel.clear()
+            parseStr = ""
             myRecursion(parserJSON)
             parseStr = "parserModel.append([" + parseStr + "])"
+            console.log(parseStr)
             eval(parseStr)
         }
     }

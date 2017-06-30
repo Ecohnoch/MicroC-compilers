@@ -8,12 +8,13 @@ public:
         initColumn1(column1);
         initColumn2(column2);
         initColumn3(column3);
+        initColumn4(column4);
     }
 
     void initColumn1(map<string, int> &c1);
     void initColumn2(map<string, int> &c2);
     void initColumn3(map<string, int> &c3);
-
+    void initColumn4(map<string, int> &c4);
     // 100  S' -> S
     // 101  S  -> if e S else S
     // 102  S  -> while e S
@@ -88,6 +89,15 @@ public:
     /*14 */   { -1, -1, -1,106, -1,  9, 10,106, -1, -1, -1},
     /*15 */   { -1, -1, -1,108, -1,  9, 10,108, -1, -1, -1}};
     map<string, int> column3;
+    // 100: G' -> G
+    // 101: G  —> i = s
+    int action3[5][5]=
+    /* 0 */  {{  2, -1, -1, -1, 1},
+    /* 1 */   { -1,-1, -1,100, -1},
+    /* 2 */   { -1, 3, -1, -1, -1},
+    /* 3 */   { -1, -1, 4, -1, -1},
+    /* 4 */   { -1, -1, -1,101,-1}};
+    map<string, int> column4;
 };
 
 class Parser
@@ -95,8 +105,8 @@ class Parser
 public:
     Parser();
     enum NodeType{
-        NONE, MAIN, STYPE, LTYPE, BOOLTYPE, STATEMENTTYPE, BTYPE,
-        ATYPE, OTYPE, ETYPE, TERMITYPE
+       NAN, MAIN, STYPE, LTYPE, BOOLTYPE, STATEMENTTYPE, BTYPE,
+        ATYPE, OTYPE, ETYPE, TERMITYPE, ASSIGN, GTYPE
     };
     class TreeNode{
     public:
@@ -105,7 +115,7 @@ public:
         TreeNode *parent;
         NodeType nodetype;
         TreeNode(){
-            nodetype = NONE;
+            nodetype = NAN;
             child[0] = child[1] = child[2] = child[3] = child[4] = nullptr;
             parent = nullptr;
         }
@@ -124,11 +134,13 @@ public:
     void test();
     void testParseBoolStatement();
     void testCalculateStatement();
+    void testAssignStatment();
     void testMainStatement();
+
     TreeNode* parseBoolStatement(vector<Tokenizer::Token>);
     TreeNode* parseCalculateStatement(vector<Tokenizer::Token>);
     TreeNode* parseMainStatement(vector<Tokenizer::Token>);
-
+    TreeNode* parseAssignStatement(vector<Tokenizer::Token>);
     void printSyntaxTree(TreeNode *tree);
 private:
     Tokenizer tokener;

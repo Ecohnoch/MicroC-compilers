@@ -41,6 +41,14 @@ void Table::initColumn3(map<string, int> &c3){
     c3["O"]   = 10;
 }
 
+void Table::initColumn4(map<string, int> &c4){
+    c4["i"] = 0;
+    c4["="] = 1;
+    c4["a"] = 2;
+    c4["#"] = 3;
+    c4["G"] = 4;
+}
+
 Parser::Parser(){}
 
 void Parser::getSourceCode(string s){
@@ -421,11 +429,13 @@ Parser::TreeNode* Parser::parseMainStatement(vector<Tokenizer::Token> tokens){
             endToken.name = "#";
             endToken.type = Tokenizer::SIMBOL;
             calculateStatement.push_back(endToken);
+            for(auto i: calculateStatement)
+                cout<<i.name<<endl;
             Tokenizer::Token pushToken;
             pushToken.name = "a";
             pushToken.type = Tokenizer::INT;
             stackElement tmpPush(t.action[s.state][t.column1["a"]], pushToken);
-            tmpPush.ptr = parseCalculateStatement(calculateStatement);
+            tmpPush.ptr = parseAssignStatement(calculateStatement);
             stack.push_back(tmpPush);
             continue;
         }
@@ -569,6 +579,94 @@ Parser::TreeNode* Parser::parseMainStatement(vector<Tokenizer::Token> tokens){
     return root;
 }
 
+Parser::TreeNode* Parser::parseAssignStatement(vector<Tokenizer::Token> tokens){
+    Table t;
+    TreeNode *root = new TreeNode;
+    root->nodetype = ASSIGN;
+    vector<stackElement> stack;
+    int start = 0;
+    Tokenizer::Token firstToken;
+    firstToken.name = "0";
+    firstToken.type = Tokenizer::NONE;
+    stack.push_back(stackElement(0, firstToken));
+    int avoidEndlessLoop = 0;
+    while(1){
+        stackElement s = stack.back();
+        Tokenizer::Token thisToken = tokens.at(start);
+        int thisState;
+        if(thisToken.type == Tokenizer::ID || thisToken.type == Tokenizer::INT){
+            thisState = t.action3[s.state][t.column4["i"]];
+        }else if(thisToken.name == "="){
+            Tokenizer::Token simbolToken;
+            simbolToken.name = "=";
+            simbolToken.type = Tokenizer::SIMBOL;
+            stack.push_back(stackElement(t.action3[s.state][t.column4["="]], simbolToken));
+            vector<Tokenizer::Token> calculateStatement;
+            while(thisToken.name != "#"){
+                start = start + 1;
+                thisToken = tokens.at(start);
+                calculateStatement.push_back(thisToken);
+            }
+            // calculateStatement.pop_back();
+            Tokenizer::Token pushToken ;
+            pushToken.name = "a";
+            pushToken.type = Tokenizer::INT;
+
+            stackElement tmpPush(t.action3[stack.back().state][t.column4["a"]], pushToken);
+            tmpPush.ptr = parseCalculateStatement(calculateStatement);
+            stack.push_back(tmpPush);
+            continue;
+        }else{
+            thisState = t.action3[s.state][t.column4[thisToken.name]];
+        }
+        if(thisState > 0 && thisState < 100){
+            // shift in
+           stack.push_back(stackElement(thisState, thisToken));
+           start = start + 1;
+           cout<<"shift in"<<endl;
+        }else if(thisState == 101){
+            stackElement tmpPop1 = stack.back();
+            stack.pop_back();
+            stackElement tmpPop2 = stack.back();
+            stack.pop_back();
+            stackElement tmpPop3 = stack.back();
+            stack.pop_back();
+            int gotoState = t.action3[stack.back().state][t.column4["G"]];
+            Tokenizer::Token tmpToken;
+            tmpToken.name = "G";
+            tmpToken.type = Tokenizer::NONE;
+            stackElement tmpPush(gotoState, tmpToken);
+            tmpPush.ptr = new TreeNode;
+            tmpPush.ptr->nodetype = GTYPE;
+            tmpPush.ptr->child[0] = new TreeNode;
+            tmpPush.ptr->child[0]->nodetype = TERMITYPE;
+            tmpPush.ptr->child[0]->token = tmpPop3.token;
+            tmpPush.ptr->child[1] = new TreeNode;
+            tmpPush.ptr->child[1]->nodetype = TERMITYPE;
+            tmpPush.ptr->child[1]->token = tmpPop2.token;
+            tmpPush.ptr->child[2] = tmpPop1.ptr;
+            stack.push_back(tmpPush);
+            cout<<"G -> i = s"<<endl;
+        }else if(thisState == 100){
+            stackElement tmpPop = stack.back();
+            root = tmpPop.ptr;
+            root->nodetype = ASSIGN;
+            break;
+        }else{
+            cout<<"***Error, assignStatement"<<endl;
+            break;
+        }
+
+        avoidEndlessLoop ++;
+        if(avoidEndlessLoop >= 100){
+            cout<<"***EndlessLoop appears!"<<endl;
+            break;
+        }
+    }
+
+    return root;
+}
+
 void Parser::testParseBoolStatement(){
     Tokenizer tmpTokenizer;
     tmpTokenizer.getSourceCode("(5>3)&&(a<b)||!(6)#");
@@ -599,19 +697,23 @@ void Parser::testCalculateStatement(){
     cout<<r->child[1]->child[2]->child[0]->child[0]->token.name<<endl;
 }
 
+void Parser::testAssignStatment(){
+    Tokenizer tmpTokenizer;
+    tmpTokenizer.getSourceCode("p = (3+5*2+6*(3+7)*2+3*3)#");
+    TreeNode* r = parseAssignStatement(tmpTokenizer.getAllTokens());
+}
+
 void Parser::testMainStatement(){
     Tokenizer tmpTokenizer;
-    tmpTokenizer.getSourceCode("if((5>3)&&(a<b)||!(6)){(3+5*2+6*(3+7)*2+3*3);}else{c+1;while(5<3){3+3;}}");
+    tmpTokenizer.getSourceCode("if((5>3)&&(a<b)||!(6)){p=(3+5*2+6*(3+7)*2+3*3);}else{c=c+1;while(5<3){t=3+3;}}");
     TreeNode* r = parseMainStatement(tmpTokenizer.getAllTokens());
     cout<<r->child[1]->nodetype<<" "<<BOOLTYPE<<endl;
     cout<<r->child[2]->nodetype<<" "<<STYPE<<endl;
-    cout<<r->child[3]->token.name<<endl;
-    cout<<r->child[4]->child[1]->child[0]->child[0]->child[0]->child[0]->token.name<<endl;
 }
 
 void Parser::test(){
     Tokenizer tmpTokenizer;
-    tmpTokenizer.getSourceCode("if((5>3)&&(a<b)||!(6)){(3+5*2+6*(3+7)*2+3*3);}else{c+1;while(5<3){3+3;}}");
+    tmpTokenizer.getSourceCode("if((5>3)&&(a<b)||!(6)){c=(3+5*2+6*(3+7)*2+3*3);}else{c=c+1;while(5<3){c=3+3;}}");
     TreeNode* r = parseMainStatement(tmpTokenizer.getAllTokens());
     printSyntaxTree(r);
 }
@@ -623,9 +725,6 @@ void Parser::printSyntaxTree(TreeNode *tree){
         for (int i = 0; i < indentno; i++)
             cout << " ";
         switch (tree->nodetype){
-        case NONE:
-            cout << "NONE" << endl;
-            break;
         case STYPE:
             cout << "S" << endl;
             break;

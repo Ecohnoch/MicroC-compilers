@@ -100,6 +100,18 @@ void transfer::recursion(Parser::TreeNode *tree, string& s){
             s = s + "\"";
             s = s + ",";
             break;
+        case Parser::GTYPE:
+            s = s + "\"";
+            s = s + "G";
+            s = s + "\"";
+            s = s + ",";
+            break;
+        case Parser::ASSIGN:
+            s = s + "\"";
+            s = s + "ASSIGN";
+            s = s + "\"";
+            s = s + ",";
+            break;
         case Parser::TERMITYPE:
             s = s + "\"";
             s = s + tree->token.name;
@@ -127,8 +139,8 @@ QString transfer::parserToJSON(QString sourcecode){
 }
 
 void transfer::test(){
-    string s = "if((5>3)&&(a<b)||!(6)){(3+5*2+6*(3+7)*2+3*3);}else{c+1;while(5<3){3+3;}}";
-    QString ss = tokensToJSON(QString::fromStdString(s));
+    string s = "if((5>3)&&(a<b)||!(6)){p=(3+5*2+6*(3+7)*2+3*3);}else{p=c+1;while(5<3){p=3+3;}}";
+    QString ss = parserToJSON(QString::fromStdString(s));
     cout<<ss.toStdString()<<endl;
 }
 

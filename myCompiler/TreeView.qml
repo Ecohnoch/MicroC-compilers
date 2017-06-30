@@ -24,9 +24,14 @@ ScrollView {
     // 节点数据展示的UI
     property Component delegate: Label {
         id: label
-        text: model.title ? model.title : 0
+        text: {
+            if(typeof(model)==null) return 0
+            return model.title ? model.title : 0}
         color: currentNode === model ? "white" : "black"
-        property var tag : model.tag
+        property var tag : {
+            if(typeof(model)==null) return 0
+            return model.tag
+        }
     }
 
     //
