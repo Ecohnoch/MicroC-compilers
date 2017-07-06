@@ -1,5 +1,6 @@
 #include <QGuiApplication>
 #include <QQmlApplicationEngine>
+#include "analyzer.h"
 #include "transfer.h"
 #include "robotfile.h"
 
@@ -15,5 +16,6 @@ int main(int argc, char *argv[])
     engine.load(QUrl(QStringLiteral("qrc:/main.qml")));
 
     return app.exec();
-
+//    Analyzer a;
+//    a.test();
 }

@@ -2,5 +2,6 @@
     <qresource prefix="/">
         <file>main.qml</file>
         <file>TreeView.qml</file>
+        <file>MyTextArea.qml</file>
     </qresource>
 </RCC>

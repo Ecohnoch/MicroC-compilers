@@ -15,6 +15,14 @@ vector<Tokenizer::Token> transfer::getTokens(QString sourcecode){
     return tokenizer.getAllTokens();
 }
 
+vector<Analyzer::Output> transfer::getAnalyzerAns(QString sourcecode){
+    Analyzer analyzer;
+    Parser parser;
+    analyzer.doMainStatement(parser.parseMainStatement(getTokens(sourcecode)));
+
+    return analyzer.output;
+}
+
 Parser::TreeNode* transfer::getParserTree(QString sourcecode){
     Parser parser;
     return parser.parseMainStatement(getTokens(sourcecode));
@@ -40,6 +48,33 @@ QString transfer::tokensToJSON(QString sourcecode){
     return QString::fromStdString(ans);
 }
 
+QString transfer::analyzerToJSON(QString sourcecode){
+    vector<Analyzer::Output> ans = getAnalyzerAns(sourcecode);
+    int length = ans.size();
+    string json;
+    json = json + "{";
+    for(int i = 0; i < length; ++i){
+        json = json + "\"";
+        json = json + to_string(i);
+//        json = json + ans.at(i).name;
+        json = json + "\"";
+        json = json + ":";
+        json = json + "{";
+        json = json + "\"";
+        json = json + ans.at(i).name;
+        json = json + "\"";
+        json = json + ":";
+        json = json + "\"";
+        json = json + to_string(ans.at(i).val);
+        json = json + "\"";
+        json = json + "}";
+        if(i != length - 1)
+            json = json + ",";
+    }
+    json = json + "}";
+    return QString::fromStdString(json);
+}
+
 void transfer::recursion(Parser::TreeNode *tree, string& s){
     static int indentno = 0;
     indentno += 1;
@@ -52,6 +87,12 @@ void transfer::recursion(Parser::TreeNode *tree, string& s){
         s = s + "[";
 
         switch (tree->nodetype){
+        case Parser::MAIN:
+            s = s + "\"";
+            s = s + "MAIN";
+            s = s + "\"";
+            s = s + ",";
+            break;
         case Parser::STYPE:
             s = s + "\"";
             s = s + "S";
@@ -109,6 +150,24 @@ void transfer::recursion(Parser::TreeNode *tree, string& s){
         case Parser::ASSIGN:
             s = s + "\"";
             s = s + "ASSIGN";
+            s = s + "\"";
+            s = s + ",";
+            break;
+        case Parser::ROPTYPE:
+            s = s + "\"";
+            s = s + "ROP";
+            s = s + "\"";
+            s = s + ",";
+            break;
+        case Parser::IDTYPE:
+            s = s + "\"";
+            s = s + "ID";
+            s = s + "\"";
+            s = s + ",";
+            break;
+        case Parser::BOOLSIMBOOLTYPE:
+            s = s + "\"";
+            s = s + "BoolSimbol";
             s = s + "\"";
             s = s + ",";
             break;

@@ -6,7 +6,9 @@ CONFIG += c++11
 SOURCES += main.cpp \
     transfer.cpp \
     parser.cpp \
-    tokenizer.cpp
+    tokenizer.cpp \
+    table.cpp \
+    analyzer.cpp
 
 RESOURCES += qml.qrc \
     resources.qrc
@@ -38,4 +40,6 @@ HEADERS += \
     transfer.h \
     scanner.h \
     parser.h \
-    tokenizer.h
+    tokenizer.h \
+    table.h \
+    analyzer.h

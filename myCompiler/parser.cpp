@@ -93,9 +93,10 @@ Parser::TreeNode* Parser::parseBoolStatement(vector<Tokenizer::Token> tokens){
             tmpToken.type = Tokenizer::NONE;
             stackElement tmpPush(gotoState, tmpToken);
             tmpPush.ptr = new TreeNode;
-            tmpPush.ptr->child[0] = new TreeNode;
             tmpPush.ptr->nodetype = BTYPE;
-            tmpPush.ptr->child[0]->nodetype = TERMITYPE;
+            tmpPush.ptr->child[0] = new TreeNode;
+            tmpPush.ptr->child[0]->parent = tmpPush.ptr;
+            tmpPush.ptr->child[0]->nodetype = IDTYPE;
             tmpPush.ptr->child[0]->token = tmpPop.token;
             stack.push_back(tmpPush);
         }else if(thisState == 102){
@@ -113,14 +114,17 @@ Parser::TreeNode* Parser::parseBoolStatement(vector<Tokenizer::Token> tokens){
             tmpPush.ptr = new TreeNode;
             tmpPush.ptr->nodetype = BTYPE;
             tmpPush.ptr->child[0] = new TreeNode;
+            tmpPush.ptr->child[0]->parent = tmpPush.ptr;
             tmpPush.ptr->child[1] = new TreeNode;
+            tmpPush.ptr->child[1]->parent = tmpPush.ptr;
             tmpPush.ptr->child[2] = new TreeNode;
+            tmpPush.ptr->child[2]->parent = tmpPush.ptr;
             tmpPush.ptr->nodetype = BTYPE;
-            tmpPush.ptr->child[0]->nodetype = TERMITYPE;
+            tmpPush.ptr->child[0]->nodetype = IDTYPE;
             tmpPush.ptr->child[0]->token = tmpPop3.token;
-            tmpPush.ptr->child[1]->nodetype = TERMITYPE;
+            tmpPush.ptr->child[1]->nodetype = ROPTYPE;
             tmpPush.ptr->child[1]->token = tmpPop2.token;
-            tmpPush.ptr->child[2]->nodetype = TERMITYPE;
+            tmpPush.ptr->child[2]->nodetype = IDTYPE;
             tmpPush.ptr->child[2]->token = tmpPop1.token;
             stack.push_back(tmpPush);
         }else if(thisState == 103){
@@ -137,8 +141,11 @@ Parser::TreeNode* Parser::parseBoolStatement(vector<Tokenizer::Token> tokens){
             stackElement tmpPush(gotoState, tmpToken);
             tmpPush.ptr = new TreeNode;
             tmpPush.ptr->child[0] = new TreeNode;
+            tmpPush.ptr->child[0]->parent = tmpPush.ptr;
             tmpPush.ptr->child[1] = tmpPop2.ptr;
+            tmpPush.ptr->child[1]->parent = tmpPush.ptr;
             tmpPush.ptr->child[2] = new TreeNode;
+            tmpPush.ptr->child[2]->parent = tmpPush.ptr;
             tmpPush.ptr->nodetype = BTYPE;
             tmpPush.ptr->child[0]->nodetype = TERMITYPE;
             tmpPush.ptr->child[0]->token = tmpPop3.token;
@@ -157,9 +164,11 @@ Parser::TreeNode* Parser::parseBoolStatement(vector<Tokenizer::Token> tokens){
             stackElement tmpPush(gotoState, tmpToken);
             tmpPush.ptr = new TreeNode;
             tmpPush.ptr->child[0] = new TreeNode;
+            tmpPush.ptr->child[0]->parent = tmpPush.ptr;
             tmpPush.ptr->child[1] = tmpPop1.ptr;
+            tmpPush.ptr->child[1]->parent = tmpPush.ptr;
             tmpPush.ptr->nodetype = BTYPE;
-            tmpPush.ptr->child[0]->nodetype = TERMITYPE;
+            tmpPush.ptr->child[0]->nodetype = BOOLSIMBOOLTYPE;
             tmpPush.ptr->child[0]->token = tmpPop2.token;
             stack.push_back(tmpPush);
         }else if(thisState == 105){
@@ -176,8 +185,10 @@ Parser::TreeNode* Parser::parseBoolStatement(vector<Tokenizer::Token> tokens){
             tmpPush.ptr = new TreeNode;
             tmpPush.ptr->nodetype = ATYPE;
             tmpPush.ptr->child[0] = tmpPop2.ptr;
+            tmpPush.ptr->child[0]->parent = tmpPush.ptr;
             tmpPush.ptr->child[1] = new TreeNode;
-            tmpPush.ptr->child[1]->nodetype = TERMITYPE;
+            tmpPush.ptr->child[1]->parent = tmpPush.ptr;
+            tmpPush.ptr->child[1]->nodetype = BOOLSIMBOOLTYPE;
             tmpPush.ptr->child[1]->token = tmpPop1.token;
             stack.push_back(tmpPush);
         }else if(thisState == 106){
@@ -193,7 +204,9 @@ Parser::TreeNode* Parser::parseBoolStatement(vector<Tokenizer::Token> tokens){
             tmpPush.ptr = new TreeNode;
             tmpPush.ptr->nodetype = BTYPE;
             tmpPush.ptr->child[0] = tmpPop2.ptr;
+            tmpPush.ptr->child[0]->parent = tmpPush.ptr;
             tmpPush.ptr->child[1] = tmpPop1.ptr;
+            tmpPush.ptr->child[1]->parent = tmpPush.ptr;
             stack.push_back(tmpPush);
         }else if(thisState == 107){
             stackElement tmpPop1 = stack.back();
@@ -208,8 +221,11 @@ Parser::TreeNode* Parser::parseBoolStatement(vector<Tokenizer::Token> tokens){
             tmpPush.ptr = new TreeNode;
             tmpPush.ptr->nodetype = OTYPE;
             tmpPush.ptr->child[0] = tmpPop2.ptr;
+            tmpPush.ptr->child[0]->parent = tmpPush.ptr;
+            tmpPush.ptr->child[0]->nodetype = BTYPE;
             tmpPush.ptr->child[1] = new TreeNode;
-            tmpPush.ptr->child[1]->nodetype = TERMITYPE;
+            tmpPush.ptr->child[1]->parent = tmpPush.ptr;
+            tmpPush.ptr->child[1]->nodetype = BOOLSIMBOOLTYPE;
             tmpPush.ptr->child[1]->token = tmpPop1.token;
             stack.push_back(tmpPush);
         }else if(thisState == 108){
@@ -226,7 +242,9 @@ Parser::TreeNode* Parser::parseBoolStatement(vector<Tokenizer::Token> tokens){
             tmpPush.ptr = new TreeNode;
             tmpPush.ptr->nodetype = BTYPE;
             tmpPush.ptr->child[0] = tmpPop2.ptr;
+            tmpPush.ptr->child[0]->parent = tmpPush.ptr;
             tmpPush.ptr->child[1] = tmpPop1.ptr;
+            tmpPush.ptr->child[1]->parent = tmpPush.ptr;
             stack.push_back(tmpPush);
         }else if(thisState == 100){
             stackElement tmpPop = stack.back();
@@ -287,10 +305,13 @@ Parser::TreeNode* Parser::parseCalculateStatement(vector<Tokenizer::Token> token
             tmpPush.ptr = new TreeNode;
             tmpPush.ptr->nodetype = ETYPE;
             tmpPush.ptr->child[0] = tmpPop3.ptr;
+            tmpPush.ptr->child[0]->parent = tmpPush.ptr;
             tmpPush.ptr->child[1] = new TreeNode;
+            tmpPush.ptr->child[1]->parent = tmpPush.ptr;
             tmpPush.ptr->child[1]->nodetype = TERMITYPE;
             tmpPush.ptr->child[1]->token = tmpPop2.token;
             tmpPush.ptr->child[2] = tmpPop1.ptr;
+            tmpPush.ptr->child[2]->parent = tmpPush.ptr;
             stack.push_back(tmpPush);
         }else if(thisState == 102){
             stackElement tmpPop1 = stack.back();
@@ -307,10 +328,13 @@ Parser::TreeNode* Parser::parseCalculateStatement(vector<Tokenizer::Token> token
             tmpPush.ptr = new TreeNode;
             tmpPush.ptr->nodetype = ETYPE;
             tmpPush.ptr->child[0] = tmpPop3.ptr;
+            tmpPush.ptr->child[0]->parent = tmpPush.ptr;
             tmpPush.ptr->child[1] = new TreeNode;
+            tmpPush.ptr->child[1]->parent = tmpPush.ptr;
             tmpPush.ptr->child[1]->nodetype = TERMITYPE;
             tmpPush.ptr->child[1]->token = tmpPop2.token;
             tmpPush.ptr->child[2] = tmpPop1.ptr;
+            tmpPush.ptr->child[2]->parent = tmpPush.ptr;
             stack.push_back(tmpPush);
         }else if(thisState == 103){
             stackElement tmpPop1 = stack.back();
@@ -327,10 +351,13 @@ Parser::TreeNode* Parser::parseCalculateStatement(vector<Tokenizer::Token> token
             tmpPush.ptr = new TreeNode;
             tmpPush.ptr->nodetype = ETYPE;
             tmpPush.ptr->child[0] = new TreeNode;
+            tmpPush.ptr->child[0]->parent = tmpPush.ptr;
             tmpPush.ptr->child[0]->nodetype = TERMITYPE;
             tmpPush.ptr->child[0]->token = tmpPop3.token;
             tmpPush.ptr->child[1] = tmpPop2.ptr;
+            tmpPush.ptr->child[1]->parent = tmpPush.ptr;
             tmpPush.ptr->child[2] = new TreeNode;
+            tmpPush.ptr->child[2]->parent = tmpPush.ptr;
             tmpPush.ptr->child[2]->nodetype = TERMITYPE;
             tmpPush.ptr->child[2]->token = tmpPop1.token;
             stack.push_back(tmpPush);
@@ -345,7 +372,8 @@ Parser::TreeNode* Parser::parseCalculateStatement(vector<Tokenizer::Token> token
             tmpPush.ptr = new TreeNode;
             tmpPush.ptr->nodetype = ETYPE;
             tmpPush.ptr->child[0] = new TreeNode;
-            tmpPush.ptr->child[0]->nodetype = TERMITYPE;
+            tmpPush.ptr->child[0]->parent = tmpPush.ptr;
+            tmpPush.ptr->child[0]->nodetype = Parser::IDTYPE;
             tmpPush.ptr->child[0]->token = tmpPop.token;
             stack.push_back(tmpPush);
         }else if(thisState == 100){
@@ -429,8 +457,6 @@ Parser::TreeNode* Parser::parseMainStatement(vector<Tokenizer::Token> tokens){
             endToken.name = "#";
             endToken.type = Tokenizer::SIMBOL;
             calculateStatement.push_back(endToken);
-            for(auto i: calculateStatement)
-                cout<<i.name<<endl;
             Tokenizer::Token pushToken;
             pushToken.name = "a";
             pushToken.type = Tokenizer::INT;
@@ -462,14 +488,19 @@ Parser::TreeNode* Parser::parseMainStatement(vector<Tokenizer::Token> tokens){
             tmpPush.ptr = new TreeNode;
             tmpPush.ptr->nodetype = STYPE;
             tmpPush.ptr->child[0] = new TreeNode;
+            tmpPush.ptr->child[0]->parent = tmpPush.ptr;
             tmpPush.ptr->child[0]->nodetype = TERMITYPE;
             tmpPush.ptr->child[0]->token = tmpPop5.token;
             tmpPush.ptr->child[1] = tmpPop4.ptr;
+            tmpPush.ptr->child[1]->parent = tmpPush.ptr;
             tmpPush.ptr->child[2] = tmpPop3.ptr;
+            tmpPush.ptr->child[2]->parent = tmpPush.ptr;
             tmpPush.ptr->child[3] = new TreeNode;
+            tmpPush.ptr->child[3]->parent = tmpPush.ptr;
             tmpPush.ptr->child[3]->nodetype = TERMITYPE;
             tmpPush.ptr->child[3]->token = tmpPop2.token;
             tmpPush.ptr->child[4] = tmpPop1.ptr;
+            tmpPush.ptr->child[4]->parent = tmpPush.ptr;
             stack.push_back(tmpPush);
         }else if(thisState == 102){
             stackElement tmpPop1 = stack.back();
@@ -486,10 +517,13 @@ Parser::TreeNode* Parser::parseMainStatement(vector<Tokenizer::Token> tokens){
             tmpPush.ptr = new TreeNode;
             tmpPush.ptr->nodetype = STYPE;
             tmpPush.ptr->child[0] = new TreeNode;
+            tmpPush.ptr->child[0]->parent = tmpPush.ptr;
             tmpPush.ptr->child[0]->nodetype = TERMITYPE;
             tmpPush.ptr->child[0]->token = tmpPop3.token;
             tmpPush.ptr->child[1] = tmpPop2.ptr;
+            tmpPush.ptr->child[1]->parent = tmpPush.ptr;
             tmpPush.ptr->child[2] = tmpPop1.ptr;
+            tmpPush.ptr->child[2]->parent = tmpPush.ptr;
             stack.push_back(tmpPush);
         }else if(thisState == 103){
             stackElement tmpPop1 = stack.back();
@@ -506,10 +540,13 @@ Parser::TreeNode* Parser::parseMainStatement(vector<Tokenizer::Token> tokens){
             tmpPush.ptr = new TreeNode;
             tmpPush.ptr->nodetype = STYPE;
             tmpPush.ptr->child[0] = new TreeNode;
+            tmpPush.ptr->child[0]->parent = tmpPush.ptr;
             tmpPush.ptr->child[0]->nodetype = TERMITYPE;
             tmpPush.ptr->child[0]->token  = tmpPop3.token;
             tmpPush.ptr->child[1] = tmpPop2.ptr;
+            tmpPush.ptr->child[1]->parent = tmpPush.ptr;
             tmpPush.ptr->child[2] = new TreeNode;
+            tmpPush.ptr->child[2]->parent = tmpPush.ptr;
             tmpPush.ptr->child[2]->nodetype = TERMITYPE;
             tmpPush.ptr->child[2]->token = tmpPop1.token;
             stack.push_back(tmpPush);
@@ -526,7 +563,9 @@ Parser::TreeNode* Parser::parseMainStatement(vector<Tokenizer::Token> tokens){
             tmpPush.ptr = new TreeNode;
             tmpPush.ptr->nodetype = STYPE;
             tmpPush.ptr->child[0] = tmpPop2.ptr;
+            tmpPush.ptr->child[0]->parent = tmpPush.ptr;
             tmpPush.ptr->child[1] = new TreeNode;
+            tmpPush.ptr->child[1]->parent = tmpPush.ptr;
             tmpPush.ptr->child[1]->nodetype = TERMITYPE;
             tmpPush.ptr->child[1]->token = tmpPop1.token;
             stack.push_back(tmpPush);
@@ -542,7 +581,7 @@ Parser::TreeNode* Parser::parseMainStatement(vector<Tokenizer::Token> tokens){
             tmpPush.ptr = new TreeNode;
             tmpPush.ptr->nodetype = LTYPE;
             tmpPush.ptr->child[0] = tmpPop1.ptr;
-
+            tmpPush.ptr->child[0]->parent = tmpPush.ptr;
             stack.push_back(tmpPush);
         }else if(thisState == 106){
             stackElement tmpPop1 = stack.back();
@@ -557,7 +596,9 @@ Parser::TreeNode* Parser::parseMainStatement(vector<Tokenizer::Token> tokens){
             tmpPush.ptr = new TreeNode;
             tmpPush.ptr->nodetype = LTYPE;
             tmpPush.ptr->child[0] = tmpPop2.ptr;
+            tmpPush.ptr->child[0]->parent = tmpPush.ptr;
             tmpPush.ptr->child[1] = tmpPop1.ptr;
+            tmpPush.ptr->child[1]->parent = tmpPush.ptr;
             stack.push_back(tmpPush);
         }else if(thisState == 100){
             stackElement tmpPop = stack.back();
@@ -623,7 +664,6 @@ Parser::TreeNode* Parser::parseAssignStatement(vector<Tokenizer::Token> tokens){
             // shift in
            stack.push_back(stackElement(thisState, thisToken));
            start = start + 1;
-           cout<<"shift in"<<endl;
         }else if(thisState == 101){
             stackElement tmpPop1 = stack.back();
             stack.pop_back();
@@ -639,14 +679,16 @@ Parser::TreeNode* Parser::parseAssignStatement(vector<Tokenizer::Token> tokens){
             tmpPush.ptr = new TreeNode;
             tmpPush.ptr->nodetype = GTYPE;
             tmpPush.ptr->child[0] = new TreeNode;
-            tmpPush.ptr->child[0]->nodetype = TERMITYPE;
+            tmpPush.ptr->child[0]->parent = tmpPush.ptr;
+            tmpPush.ptr->child[0]->nodetype = Parser::IDTYPE;
             tmpPush.ptr->child[0]->token = tmpPop3.token;
             tmpPush.ptr->child[1] = new TreeNode;
+            tmpPush.ptr->child[1]->parent = tmpPush.ptr;
             tmpPush.ptr->child[1]->nodetype = TERMITYPE;
             tmpPush.ptr->child[1]->token = tmpPop2.token;
             tmpPush.ptr->child[2] = tmpPop1.ptr;
+            tmpPush.ptr->child[2]->parent = tmpPush.ptr;
             stack.push_back(tmpPush);
-            cout<<"G -> i = s"<<endl;
         }else if(thisState == 100){
             stackElement tmpPop = stack.back();
             root = tmpPop.ptr;

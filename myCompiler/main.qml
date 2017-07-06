@@ -10,17 +10,19 @@ import Transfer 1.0
 import File 1.0
 
 ApplicationWindow {
+    id: mainWindow
     visible: true
-    width: 640
-    height: 480
+    width: 1080
+    height: 720
     minimumWidth: 400
     minimumHeight: 300
     title: qsTr("Micro C compilers")
     property string textAreaBackgrondColor: "#E0E0E0"
     property string textAreaTextColor: "#333"
+    property string fontFamily: "monoco"
     property string outputBackgroundColor: "#272822"
     property string outputTextColor: "#FFFFFF"
-    FontLoader{id: uiFont; source: ""}
+    // FontLoader{id: uiFont; source: "monoco"}
 
     property string fileSource
     property string sourceCode: ""
@@ -73,10 +75,12 @@ ApplicationWindow {
         iconName: "Parse"
         text: "Parse"
         onTriggered: {
+            textArea.outputFadeInStart()
             trans.doParser()
             tokenView.visible = false
+            analyzerView.visible = false
             parserView.visible = true
-            separator.text = "语法树"
+            separator.text = "Syntax Tree"
         }
 
     }
@@ -87,7 +91,12 @@ ApplicationWindow {
         iconName: "Trans"
         text: "Trans"
         onTriggered: {
-            // TODO
+            textArea.outputFadeInStart()
+            trans.doAnalyser()
+            tokenView.visible = false
+            analyzerView.visible = true
+            parserView.visible = false
+            separator.text = "Analyzer"
         }
     }
 
@@ -106,10 +115,12 @@ ApplicationWindow {
         iconName: "Token"
         text: "Token"
         onTriggered: {
+            textArea.outputFadeInStart()
             trans.doTokens()
             parserView.visible = false
+            analyzerView.visible = false
             tokenView.visible = true
-            separator.text = "记号流"
+            separator.text = "Token Flow"
         }
     }
 
@@ -128,35 +139,98 @@ ApplicationWindow {
         }
     }
 
-
-    TextArea{
-        id: textArea
-        style: TextAreaStyle {
-            textColor: textAreaTextColor
-            selectionColor: "steelblue"
-            selectedTextColor: "#eee"
-            backgroundColor: textAreaBackgrondColor
+    menuBar: MenuBar{
+        id: menu
+        Menu{
+            id: fileMenu
+            title: "&File"
+            MenuItem {action: fileOpenAction}
+            MenuItem {action: fileSaveAction}
+            MenuItem {id: quitAction; text: "Quit"; onTriggered: Qt.quit()}
+            function __switchLanguage(language){
+                if(language === "English"){
+                    fileMenu.title = "&File"
+                    quitAction.text = "Quit"
+                }else if(language === "Chinese"){
+                    fileMenu.title = "&文件"
+                    quitAction.text = "退出"
+                }
+            }
         }
-        anchors.top: myToolBar.bottom
-
-        anchors.bottom: parent.bottom
-        anchors.bottomMargin: 0.4 * parent.height
-        anchors.left: parent.left
-        anchors.right: parent.right
-        font.family: "monoco"
-        text:"if((5>3)&&(a<b)||!(6)){\n    p = (3+5*2+6*(3+7)*2+3*3);\n}else{\n    p = c+1;\n    while(5<3){\n        p = 3+3;\n    }\n}"
-        // textFormat: Qt.RichText
-        Component.onCompleted: forceActiveFocus()
+        Menu{
+            id: doMenu
+            title: "&Do"
+            MenuItem {action: readTokensAction}
+            MenuItem {action: grammarParserAction}
+            function __switchLanguage(language){
+                if(language === "English"){
+                    doMenu.title = "&Do"
+                }else if(language === "Chinese"){
+                    doMenu.title = "&动作"
+                }
+            }
+        }
+        Menu{
+            id: appearanceMenu
+            title: "&Appearance"
+            MenuItem {text: "default"; onTriggered: switchSytle("default")}
+            MenuItem {text: "Monokai"; onTriggered: switchSytle("Monokai")}
+            MenuItem {text: "Lazy";    onTriggered: switchSytle("Lazy")}
+            function __switchLanguage(language){
+                if(language === "English"){
+                    title = "&Appearance"
+                }else if(language === "Chinese"){
+                    title = "&外观"
+                }
+            }
+        }
+        Menu{
+            id: languageMenu
+            title: "&Language"
+            MenuItem {id: englishMenu; text: "English"; onTriggered: switchLanguage("English")}
+            MenuItem {id: chineseMenu; text: "Chinese"; onTriggered: switchLanguage("Chinese")}
+            function __switchLanguage(language){
+                if(language === "English"){
+                    title = "&Language"
+                    englishMenu.text = "English"
+                    chineseMenu.text = "Chinese"
+                }else if(language === "Chinese"){
+                    title = "&语言"
+                    englishMenu.text = "英语"
+                    chineseMenu.text = "中文"
+                }
+            }
+        }
+        function _switchLanguage(language){
+            fileMenu.__switchLanguage(language)
+            doMenu.__switchLanguage(language)
+            appearanceMenu.__switchLanguage(language)
+            languageMenu.__switchLanguage(language)
+        }
     }
+
+
+    MyTextArea{
+        id: textArea
+    }
+
     Label{
         id: separator
         height: 0.05 * parent.height
         anchors.top: textArea.bottom
         anchors.left: parent.left
         anchors.right: parent.right
-        text: "记号流"
+        text: "Token Flow"
+        MouseArea{
+            anchors.fill: parent
+            onClicked: {
+                textArea.outputFadeOutStart()
+            }
+        }
     }
 
+
+//--------------------TOKENS-----------------------
     TableView{
         id: tokenView
         TableViewColumn {
@@ -178,6 +252,29 @@ ApplicationWindow {
     ListModel {
         id: tokenModel
     }
+//--------------------ANALYZER---------------------
+    TableView{
+        id: analyzerView
+        TableViewColumn {
+            role: "simbol"
+            title: "simbol"
+            width: 100
+        }
+        TableViewColumn {
+            role: "val"
+            title: "val"
+            width: 200
+        }
+        model: analyzerModel
+        anchors.top: separator.bottom
+        anchors.bottom: parent.bottom
+        anchors.left: parent.left
+        anchors.right: parent.right
+    }
+    ListModel {
+        id: analyzerModel
+    }
+//-------------------PARSER------------------------
 
     TreeView {
         id: parserView
@@ -195,6 +292,7 @@ ApplicationWindow {
     property var s: []
     property var codeJSON
     property var parserJSON
+    property var analyJSON
     Transfer{
         id: trans
         onDoTokens:{
@@ -219,6 +317,21 @@ ApplicationWindow {
             console.log(parseStr)
             eval(parseStr)
         }
+        onDoAnalyser:{
+            var data = analyzerToJSON(textArea.text)
+            analyJSON = JSON.parse(data)
+            analyzerModel.clear()
+            console.log(data)
+            for(var key in analyJSON){
+                for(var sim in analyJSON[key]){
+                    var exe = "analyzerModel.append([{\"simbol\":\"" + sim
+                    exe = exe + "\", \"val\":\"" + analyJSON[key][sim]
+                    exe = exe + "\"}])"
+                    console.log(exe)
+                    eval(exe)
+                }
+            }
+        }
     }
     property string parseStr: ""
     function myRecursion(json){
@@ -239,4 +352,40 @@ ApplicationWindow {
         }
     }
 
+
+    // Appearance
+//    property string textAreaBackgrondColor: "#E0E0E0"
+//    property string textAreaTextColor: "#333"
+
+    function switchSytle(style){
+        if(style === "default"){
+            textAreaBackgrondColor = "#E0E0E0"
+            textAreaTextColor = "#333"
+        }else if(style === "Monokai"){
+            textAreaBackgrondColor = "#272822"
+            textAreaTextColor = "#f8f8f2"
+        }else if(style === "Lazy"){
+            textAreaBackgrondColor = "#ffffff"
+            textAreaTextColor = "#000000"
+        }
+    }
+
+    function switchLanguage(language){
+        if(language === "English"){
+            fileOpenAction.text = "Open"
+            fileSaveAction.text = "Save"
+            grammarParserAction.text = "Parser"
+            translateAction.text = "Trans"
+            generateAction.text = "Generate"
+            readTokensAction.text = "Tokens"
+        }else if(language === "Chinese"){
+            fileOpenAction.text = "打开"
+            fileSaveAction.text = "保存"
+            grammarParserAction.text = "语法分析"
+            translateAction.text = "语义分析"
+            generateAction.text = "代码生成"
+            readTokensAction.text = "记号流"
+        }
+        menu._switchLanguage(language)
+    }
 }

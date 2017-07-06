@@ -106,7 +106,8 @@ public:
     Parser();
     enum NodeType{
        NAN, MAIN, STYPE, LTYPE, BOOLTYPE, STATEMENTTYPE, BTYPE,
-        ATYPE, OTYPE, ETYPE, TERMITYPE, ASSIGN, GTYPE
+        ATYPE, OTYPE, ETYPE, TERMITYPE, ASSIGN, GTYPE, ROPTYPE,
+        IDTYPE, BOOLSIMBOOLTYPE
     };
     class TreeNode{
     public:
