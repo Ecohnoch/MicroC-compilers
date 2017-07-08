@@ -2,7 +2,7 @@ import QtQuick 2.2
 import QtQuick.Controls 1.0
 import QtQuick.Controls.Styles 1.4
 import QtQuick.Layouts 1.0
-import QtQuick.Dialogs 1.1
+import QtQuick.Dialogs 1.2
 import QtQuick.Window 2.1
 import QtQuick.Window 2.2
 
@@ -31,6 +31,7 @@ ApplicationWindow {
     FileDialog{
         id: fileDialog
         property bool openFlag: true
+        title: "Please chose a file"
         onAccepted: {
             if(openFlag){
                 fileSource = fileUrl
@@ -187,6 +188,14 @@ ApplicationWindow {
                     source = File.read(":/examples/many-while.txt")
                 }
                 textArea.text = source
+            }
+        }
+        Menu{
+            id: aboutMenu
+            title: "&"+languageFile[29]
+            MenuItem{
+                text: languageFile[29]
+                onTriggered: about.show()
             }
         }
     }
@@ -380,5 +389,8 @@ ApplicationWindow {
 
             }
         }
+    }
+    AboutWindow{
+        id: about
     }
 }

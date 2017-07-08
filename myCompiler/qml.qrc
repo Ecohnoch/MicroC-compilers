@@ -3,5 +3,6 @@
         <file>main.qml</file>
         <file>TreeView.qml</file>
         <file>MyTextArea.qml</file>
+        <file>AboutWindow.qml</file>
     </qresource>
 </RCC>

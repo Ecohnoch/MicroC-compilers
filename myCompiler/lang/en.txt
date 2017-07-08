@@ -27,3 +27,5 @@ single-if
 single-while
 many-if
 many-while
+About
+<b>Micro C Compilers Version-1.0"</b><br><br>This is a Micro C Compiler, the grammar supports a subset of famous programming language C language. If there is any problem, you can contact with me. Here is my information.<br>My real name is chuyuan Xiong, you can call me Ecohnoch, this is my English name. <br>If you want to see more things , you can goto <a href=\"https://www.github.com/ecohnoch\"> <br>My Github Website.</a><br>Or goto  <a href=\"https://www.ecohnoch.cn\"> <br>My private page.</a>

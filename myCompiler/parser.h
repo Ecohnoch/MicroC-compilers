@@ -105,9 +105,22 @@ class Parser
 public:
     Parser();
     enum NodeType{
-       NAN, MAIN, STYPE, LTYPE, BOOLTYPE, STATEMENTTYPE, BTYPE,
-        ATYPE, OTYPE, ETYPE, TERMITYPE, ASSIGN, GTYPE, ROPTYPE,
-        IDTYPE, BOOLSIMBOOLTYPE
+        NANA,
+        MAIN,
+        STYPE,
+        LTYPE,
+        BOOLTYPE,
+        STATEMENTTYPE,
+        BTYPE,
+        ATYPE,
+        OTYPE,
+        ETYPE,
+        TERMITYPE,
+        ASSIGN,
+        GTYPE,
+        ROPTYPE,
+        IDTYPE,
+        BOOLSIMBOOLTYPE
     };
     class TreeNode{
     public:
@@ -116,7 +129,7 @@ public:
         TreeNode *parent;
         NodeType nodetype;
         TreeNode(){
-            nodetype = NAN;
+            nodetype = NANA;
             child[0] = child[1] = child[2] = child[3] = child[4] = nullptr;
             parent = nullptr;
         }

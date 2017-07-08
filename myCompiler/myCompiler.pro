@@ -38,7 +38,6 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 HEADERS += \
     robotfile.h \
     transfer.h \
-    scanner.h \
     parser.h \
     tokenizer.h \
     table.h \

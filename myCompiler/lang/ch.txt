@@ -27,3 +27,5 @@ Lazy
 单独的while
 很多if
 很多while
+关于
+<b>Micro C 编译器， 版本1.0</br><br><br>这是一个小型C语言编译器，它实现了C语言的一个子集，如果有任何问题的话可以联系本人，这里有我的一些联系方式。<br>我的真名叫熊楚原，你可以叫我Ecohnoch，那是我的英文名。<br>如果想要获得更多的信息，可以上<a href=\"https://www.github.com/ecohnoch\"> <br>我的Github页面 </a>.<br>或者上  <a href=\"https://www.ecohnoch.cn\"> <br>我的个人博客主页.</a>
