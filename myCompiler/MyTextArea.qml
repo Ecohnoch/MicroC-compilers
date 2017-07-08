@@ -16,7 +16,7 @@ TextArea{
     anchors.bottomMargin: 0.05 * parent.height
     anchors.left: parent.left
     anchors.right: parent.right
-    font.family: "monoco"
+    font.family: textFont.name
     font.bold: true
     font.pixelSize: 18
     text:"if((5>3)&&(a<b)||!(6)){

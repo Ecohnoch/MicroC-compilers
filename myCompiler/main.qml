@@ -17,12 +17,14 @@ ApplicationWindow {
     minimumWidth: 400
     minimumHeight: 300
     title: qsTr("Micro C compilers")
+    property string language: "en"
+    property var languageFile
     property string textAreaBackgrondColor: "#E0E0E0"
     property string textAreaTextColor: "#333"
-    property string fontFamily: "monoco"
     property string outputBackgroundColor: "#272822"
     property string outputTextColor: "#FFFFFF"
-    // FontLoader{id: uiFont; source: "monoco"}
+    FontLoader{id: uiFont; source: "qrc:/font/STKaiTi.ttf"}
+    FontLoader{id: textFont; source: "qrc:/font/liberationmono.ttf"}
 
     property string fileSource
     property string sourceCode: ""
@@ -51,7 +53,7 @@ ApplicationWindow {
     Action {
         id: fileOpenAction
         iconName: "Open"
-        text: "Open"
+        text: languageFile[0]
         onTriggered: {
             fileDialog.openFlag = true
             fileDialog.open()
@@ -62,10 +64,12 @@ ApplicationWindow {
         id: fileSaveAction
         //iconSource: "qrc:/images/"
         iconName: "Save"
-        text: "Save"
+        text: languageFile[2]
         onTriggered: {
             fileDialog.openFlag = false
-            fileDialog.open()
+//            fileDialog.open()
+//            console.log(File.exist(":/lang/ch.txt"))
+//            console.log(File.read(":/lang/ch.txt"))
         }
     }
 
@@ -73,30 +77,30 @@ ApplicationWindow {
         id: grammarParserAction
         //iconSource: "qrc:/images/"
         iconName: "Parse"
-        text: "Parse"
+        text: languageFile[3]
         onTriggered: {
             textArea.outputFadeInStart()
             trans.doParser()
             tokenView.visible = false
             analyzerView.visible = false
             parserView.visible = true
-            separator.text = "Syntax Tree"
+            separator.text = languageFile[20]
         }
 
     }
 
     Action {
         id: translateAction
-        //iconSource: "qrc:/images/"
+        //iconSource: "qrc:/images/trans.png"
         iconName: "Trans"
-        text: "Trans"
+        text: languageFile[4]
         onTriggered: {
             textArea.outputFadeInStart()
             trans.doAnalyser()
             tokenView.visible = false
             analyzerView.visible = true
             parserView.visible = false
-            separator.text = "Analyzer"
+            separator.text = languageFile[21]
         }
     }
 
@@ -113,14 +117,14 @@ ApplicationWindow {
     Action {
         id: readTokensAction
         iconName: "Token"
-        text: "Token"
+        text: languageFile[1]
         onTriggered: {
             textArea.outputFadeInStart()
             trans.doTokens()
             parserView.visible = false
             analyzerView.visible = false
             tokenView.visible = true
-            separator.text = "Token Flow"
+            separator.text = languageFile[19]
         }
     }
 
@@ -129,13 +133,12 @@ ApplicationWindow {
         width: parent.width
         RowLayout{
             anchors.fill: parent
-            spacing: 0
-            ToolButton{action: fileOpenAction}
-            ToolButton
-            {action: readTokensAction}
-            ToolButton{action: fileSaveAction}
-            ToolButton{action: grammarParserAction}
-            ToolButton{action: translateAction}
+            spacing: 6
+            ToolButton{action: fileOpenAction;   Layout.minimumWidth: 216;}
+            ToolButton{action: readTokensAction; Layout.minimumWidth: 216}
+            ToolButton{action: fileSaveAction;   Layout.minimumWidth: 216}
+            ToolButton{action: grammarParserAction; Layout.minimumWidth: 216}
+            ToolButton{action: translateAction;  Layout.minimumWidth: 216}
         }
     }
 
@@ -143,69 +146,30 @@ ApplicationWindow {
         id: menu
         Menu{
             id: fileMenu
-            title: "&File"
+            title: "&" + languageFile[5]
             MenuItem {action: fileOpenAction}
             MenuItem {action: fileSaveAction}
             MenuItem {id: quitAction; text: "Quit"; onTriggered: Qt.quit()}
-            function __switchLanguage(language){
-                if(language === "English"){
-                    fileMenu.title = "&File"
-                    quitAction.text = "Quit"
-                }else if(language === "Chinese"){
-                    fileMenu.title = "&文件"
-                    quitAction.text = "退出"
-                }
-            }
         }
         Menu{
             id: doMenu
-            title: "&Do"
+            title: "&" + languageFile[8]
             MenuItem {action: readTokensAction}
             MenuItem {action: grammarParserAction}
-            function __switchLanguage(language){
-                if(language === "English"){
-                    doMenu.title = "&Do"
-                }else if(language === "Chinese"){
-                    doMenu.title = "&动作"
-                }
-            }
+            MenuItem {action: translateAction}
         }
         Menu{
             id: appearanceMenu
-            title: "&Appearance"
-            MenuItem {text: "default"; onTriggered: switchSytle("default")}
-            MenuItem {text: "Monokai"; onTriggered: switchSytle("Monokai")}
-            MenuItem {text: "Lazy";    onTriggered: switchSytle("Lazy")}
-            function __switchLanguage(language){
-                if(language === "English"){
-                    title = "&Appearance"
-                }else if(language === "Chinese"){
-                    title = "&外观"
-                }
-            }
+            title: "&" + languageFile[12]
+            MenuItem {text: languageFile[13]; onTriggered: switchSytle("default")}
+            MenuItem {text: languageFile[14]; onTriggered: switchSytle("Monokai")}
+            MenuItem {text: languageFile[15];    onTriggered: switchSytle("Lazy")}
         }
         Menu{
             id: languageMenu
-            title: "&Language"
-            MenuItem {id: englishMenu; text: "English"; onTriggered: switchLanguage("English")}
-            MenuItem {id: chineseMenu; text: "Chinese"; onTriggered: switchLanguage("Chinese")}
-            function __switchLanguage(language){
-                if(language === "English"){
-                    title = "&Language"
-                    englishMenu.text = "English"
-                    chineseMenu.text = "Chinese"
-                }else if(language === "Chinese"){
-                    title = "&语言"
-                    englishMenu.text = "英语"
-                    chineseMenu.text = "中文"
-                }
-            }
-        }
-        function _switchLanguage(language){
-            fileMenu.__switchLanguage(language)
-            doMenu.__switchLanguage(language)
-            appearanceMenu.__switchLanguage(language)
-            languageMenu.__switchLanguage(language)
+            title: "&" + languageFile[16]
+            MenuItem {id: englishMenu; text: languageFile[17]; onTriggered: switchLanguage("English")}
+            MenuItem {id: chineseMenu; text: languageFile[18]; onTriggered: switchLanguage("Chinese")}
         }
     }
 
@@ -220,7 +184,7 @@ ApplicationWindow {
         anchors.top: textArea.bottom
         anchors.left: parent.left
         anchors.right: parent.right
-        text: "Token Flow"
+        text: languageFile[19]
         MouseArea{
             anchors.fill: parent
             onClicked: {
@@ -361,31 +325,42 @@ ApplicationWindow {
         if(style === "default"){
             textAreaBackgrondColor = "#E0E0E0"
             textAreaTextColor = "#333"
+            textFont.source = "qrc:/font/liberationmono.ttf"
         }else if(style === "Monokai"){
             textAreaBackgrondColor = "#272822"
             textAreaTextColor = "#f8f8f2"
+            textFont.source = "qrc:/font/Marion Italic.ttf"
         }else if(style === "Lazy"){
             textAreaBackgrondColor = "#ffffff"
             textAreaTextColor = "#000000"
+            textFont.source = "qrc:/font/gulliver.otf"
         }
     }
 
-    function switchLanguage(language){
-        if(language === "English"){
-            fileOpenAction.text = "Open"
-            fileSaveAction.text = "Save"
-            grammarParserAction.text = "Parser"
-            translateAction.text = "Trans"
-            generateAction.text = "Generate"
-            readTokensAction.text = "Tokens"
-        }else if(language === "Chinese"){
-            fileOpenAction.text = "打开"
-            fileSaveAction.text = "保存"
-            grammarParserAction.text = "语法分析"
-            translateAction.text = "语义分析"
-            generateAction.text = "代码生成"
-            readTokensAction.text = "记号流"
+    function switchLanguage(lang){
+        if(lang === "English"){
+            language = "en"
+        }else if(lang === "Chinese"){
+            language = "ch"
         }
-        menu._switchLanguage(language)
+    }
+
+    Component.onCompleted: {
+        if(File.exist(":/lang/en.txt")){
+            languageFile = File.read(":/lang/en.txt").split("\n")
+            for(var item in languageFile){
+                console.log(languageFile[item])
+
+            }
+        }
+    }
+    onLanguageChanged: {
+        if(File.exist(":/lang/"+language+".txt")){
+            languageFile = File.read(":/lang/"+language+".txt").split("\n")
+            for(var item in languageFile){
+                console.log(languageFile[item])
+
+            }
+        }
     }
 }

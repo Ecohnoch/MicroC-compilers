@@ -11,7 +11,7 @@ ScrollView {
     property var model
     property int rowHeight: 19
     property int columnIndent: 22
-    property string expanderImage : "expander.png";
+    property string expanderImage : "qrc:/images/expander.png";
 
     // 私有属性
     property var currentNode  // 当前节点数据

@@ -1,0 +1,22 @@
+Open
+Token
+Save
+Parser
+Analyzer
+File
+Open
+Save
+Action
+Token
+Parser
+Analyzer
+Appearance
+Default
+Monokai
+Lazy
+Language
+English
+Chinese
+Tokens(click to hidden)
+Syntax Tree(click to hidden)
+Analyzer(click to hidden)

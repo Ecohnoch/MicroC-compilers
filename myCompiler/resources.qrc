@@ -1,7 +1,12 @@
 <RCC>
     <qresource prefix="/">
-        <file>expander.png</file>
-        <file>arrow.png</file>
-        <file>trigle.png</file>
+        <file>images/expander.png</file>
+        <file>images/trans.png</file>
+        <file>lang/ch.txt</file>
+        <file>lang/en.txt</file>
+        <file>font/liberationmono.ttf</file>
+        <file>font/STKaiTi.ttf</file>
+        <file>font/gulliver.otf</file>
+        <file>font/Marion Italic.ttf</file>
     </qresource>
 </RCC>

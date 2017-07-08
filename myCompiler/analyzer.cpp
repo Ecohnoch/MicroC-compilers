@@ -200,16 +200,20 @@ void Analyzer::doMainStatement(Parser::TreeNode *tree){
             if(tree->child[1] != nullptr && tree->child[2] != nullptr &&
                tree->child[3] != nullptr && tree->child[4] != nullptr &&
                tree->child[0]->token.name == "if" && tree->child[3]->token.name == "else"){
-                map<string, STable::TableInfo> tmp2;
-                stable.tableStack.push(tmp2);
+// -------------------------------WILL BE OPTIMISM-------------------------------------------
+//                map<string, STable::TableInfo> tmp2;
+//                stable.tableStack.push(tmp2);
+// ------------------------------------------------------------------------------------------
                 if(doBoolStatement(tree->child[1])){
                     doMainStatement(tree->child[2]);
                 }else{
                     doMainStatement(tree->child[4]);
                 }
             }else if(tree->child[0]->token.name == "while"){
-                map<string, STable::TableInfo> tmp2;
-                stable.tableStack.push(tmp2);
+// -------------------------------WILL BE OPTIMISM-------------------------------------------
+//                map<string, STable::TableInfo> tmp2;
+//                stable.tableStack.push(tmp2);
+// ------------------------------------------------------------------------------------------
                 while(doBoolStatement(tree->child[1])){
                     doMainStatement(tree->child[2]);
                 }
