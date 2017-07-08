@@ -1,0 +1,7 @@
+{
+    ans = 1;
+    while(p<10){
+        p = p+1;
+        ans = ans * p;
+    }
+}

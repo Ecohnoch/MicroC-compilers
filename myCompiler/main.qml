@@ -104,15 +104,6 @@ ApplicationWindow {
         }
     }
 
-    Action {
-        id: generateAction
-        //iconSource: "qrc:/images/"
-        iconName: "generate"
-        text: "generate"
-        onTriggered: {
-            // TODO
-        }
-    }
 
     Action {
         id: readTokensAction
@@ -170,6 +161,33 @@ ApplicationWindow {
             title: "&" + languageFile[16]
             MenuItem {id: englishMenu; text: languageFile[17]; onTriggered: switchLanguage("English")}
             MenuItem {id: chineseMenu; text: languageFile[18]; onTriggered: switchLanguage("Chinese")}
+        }
+        Menu{
+            id: exampleMenu
+            title: "&" + languageFile[22]
+            MenuItem {id: example1; text: languageFile[23]; onTriggered: exampleMenu.showExample(1)}
+            MenuItem {id: example2; text: languageFile[24]; onTriggered: exampleMenu.showExample(2)}
+            MenuItem {id: example3; text: languageFile[25]; onTriggered: exampleMenu.showExample(3)}
+            MenuItem {id: example4; text: languageFile[26]; onTriggered: exampleMenu.showExample(4)}
+            MenuItem {id: example5; text: languageFile[27]; onTriggered: exampleMenu.showExample(5)}
+            MenuItem {id: example6; text: languageFile[28]; onTriggered: exampleMenu.showExample(6)}
+            function showExample(i){
+                var source = ""
+                if(i === 1){
+                    source = File.read(":/examples/100sum.txt")
+                }else if(i === 2){
+                    source = File.read(":/examples/10mul.txt")
+                }else if(i === 3){
+                    source = File.read(":/examples/single-if.txt")
+                }else if(i === 4){
+                    source = File.read(":/examples/single-while.txt")
+                }else if(i === 5){
+                    source = File.read(":/examples/many-if.txt")
+                }else if(i === 6){
+                    source = File.read(":/examples/many-while.txt")
+                }
+                textArea.text = source
+            }
         }
     }
 

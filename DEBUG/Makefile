@@ -663,7 +663,13 @@ qrc_resources.cpp: ../myCompiler/resources.qrc \
 		../myCompiler/lang/en.txt \
 		../myCompiler/font/STKaiTi.ttf \
 		../myCompiler/font/liberationmono.ttf \
-		../myCompiler/font/gulliver.otf
+		../myCompiler/font/gulliver.otf \
+		../myCompiler/examples/many-while.txt \
+		../myCompiler/examples/single-if.txt \
+		../myCompiler/examples/100sum.txt \
+		../myCompiler/examples/10mul.txt \
+		../myCompiler/examples/single-while.txt \
+		../myCompiler/examples/many-if.txt
 	/Users/ecohnoch/Qt/5.7/clang_64/bin/rcc -name resources ../myCompiler/resources.qrc -o qrc_resources.cpp
 
 compiler_moc_header_make_all: moc_robotfile.cpp moc_transfer.cpp

@@ -8,5 +8,11 @@
         <file>font/STKaiTi.ttf</file>
         <file>font/gulliver.otf</file>
         <file>font/Marion Italic.ttf</file>
+        <file>examples/10mul.txt</file>
+        <file>examples/100sum.txt</file>
+        <file>examples/many-if.txt</file>
+        <file>examples/many-while.txt</file>
+        <file>examples/single-if.txt</file>
+        <file>examples/single-while.txt</file>
     </qresource>
 </RCC>
