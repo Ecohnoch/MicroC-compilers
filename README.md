@@ -49,42 +49,42 @@ if、else、while
 
 首先是主界面：
 
-![image](http://www.ecohnoch.com/img/mic1.png){:height="50%" width="50%"}
+![image](http://www.ecohnoch.cn/img/mic1.png){:height="50%" width="50%"}
 
 然后是词法分析，分析结果均在下方的表中：
 
-![image](http://www.ecohnoch.com/img/mic11.png){:height="50%" width="50%"}
+![image](http://www.ecohnoch.cn/img/mic11.png){:height="50%" width="50%"}
 
 然后是语法分析，构建语法树，语法树也在下方的表中，按层数索引，三角箭头打开一层：
 
-![image](http://www.ecohnoch.com/img/mic2.png){:height="50%" width="50%"}
+![image](http://www.ecohnoch.cn/img/mic2.png){:height="50%" width="50%"}
 
 第一层的五个兄弟分别是：if Bool S else S：
 
-![image](http://www.ecohnoch.com/img/mic6.png){:height="50%" width="50%"}
+![image](http://www.ecohnoch.cn/img/mic6.png){:height="50%" width="50%"}
 
 语法树的一个局部：
 
-![image](http://www.ecohnoch.com/img/mic7.png){:height="50%" width="50%"}
+![image](http://www.ecohnoch.cn/img/mic7.png){:height="50%" width="50%"}
 
 然后是语义分析，所有变量的每一次更新都会显示：
 
-![image](http://www.ecohnoch.com/img/mic3.png){:height="50%" width="50%"}
+![image](http://www.ecohnoch.cn/img/mic3.png){:height="50%" width="50%"}
 
 我给了几个示例代码，点击相应的名字就会出现相应的代码：
 
-![image](http://www.ecohnoch.com/img/mic8.png){:height="50%" width="50%"}
+![image](http://www.ecohnoch.cn/img/mic8.png){:height="50%" width="50%"}
 
 还有皮肤系统，目前就两个：
 
-![image](http://www.ecohnoch.com/img/mic4.png){:height="50%" width="50%"}
+![image](http://www.ecohnoch.cn/img/mic4.png){:height="50%" width="50%"}
 
-![image](http://www.ecohnoch.com/img/mic5.png){:height="50%" width="50%"}
+![image](http://www.ecohnoch.cn/img/mic5.png){:height="50%" width="50%"}
 
 还有语言系统，目前只包括中文和英文：
 
-![image](http://www.ecohnoch.com/img/mic9.png){:height="50%" width="50%"}
+![image](http://www.ecohnoch.cn/img/mic9.png){:height="50%" width="50%"}
 
 最后是一个关于界面：
 
-![image](http://www.ecohnoch.com/img/mic10.png){:height="50%" width="50%"}
+![image](http://www.ecohnoch.cn/img/mic10.png){:height="50%" width="50%"}
